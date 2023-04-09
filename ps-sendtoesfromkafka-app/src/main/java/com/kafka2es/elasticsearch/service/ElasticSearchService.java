@@ -2,6 +2,7 @@ package com.kafka2es.elasticsearch.service;
 
 import com.kafka2es.dto.Product;
 import com.kafka2es.elasticsearch.repository.ProductRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpHost;
 import org.elasticsearch.client.Request;
 import org.elasticsearch.client.RestClient;
@@ -10,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+
+@Slf4j
 @Service
 public class ElasticSearchService {
 
@@ -26,11 +29,12 @@ public class ElasticSearchService {
 
     public ResponseEntity putDocument(Product product){
         try{
+            log.info("Inserting document :{} into elastic search", product.toString());
             request.setJsonEntity(product.toString());
             restClient.performRequest(request);
             return ResponseEntity.status(HttpStatus.OK).build();
         }catch (Exception e){
-            System.out.println("Exception Thrown while adding product");
+            log.error("Exception Thrown while adding product, exception: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
